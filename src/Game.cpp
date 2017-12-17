@@ -9,7 +9,7 @@ Game::Game(const std::string& title, unsigned int width, unsigned int height)
 void Game::run()
 {
     m_window.setActive();
-    
+
     if(!init()) {
         return;
     }
@@ -23,6 +23,8 @@ void Game::run()
         while(m_window.pollEvent(event)) {
             if(event.type == sf::Event::Closed) {
                 stop();
+            } else {
+                handleWindowEvent(event);
             }
         }
 
@@ -32,6 +34,8 @@ void Game::run()
 
         m_window.display();
     }
+
+    cleanup();
 }
 
 void Game::stop()
