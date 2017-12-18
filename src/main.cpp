@@ -1,5 +1,9 @@
 #include <glad/glad.h>
+#include "Cell.hpp"
 #include "Game.hpp"
+
+#include <bitset>
+#include <iostream>
 
 class SimpleGame : public Game
 {
@@ -28,6 +32,8 @@ protected:
 
 int main(int argc, char** argv)
 {
+    std::cout << Cell::WIDTH << std::endl;
+    return -1;
     SimpleGame game{};
     game.run();
 }

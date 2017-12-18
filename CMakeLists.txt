@@ -60,6 +60,7 @@ include_directories(
 
 set(SOURCE_FILES src/main.cpp
                  src/Game.cpp src/Game.hpp
+                 src/Cell.cpp src/Cell.hpp
                  deps/glad/src/glad.c)
 
 
