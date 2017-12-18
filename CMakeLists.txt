@@ -62,6 +62,7 @@ set(SOURCE_FILES src/main.cpp
                  src/Game.cpp src/Game.hpp
                  src/Cell.cpp src/Cell.hpp
 				 src/MazeGame.cpp src/MazeGame.hpp
+				 src/Vertex.hpp
                  deps/glad/src/glad.c)
 
 
