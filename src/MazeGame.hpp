@@ -17,6 +17,7 @@ public:
 
 protected:
 	bool init() override;
+	void update(sf::Time& delta) override;
 	void render() override;
 	void handleWindowEvent(sf::Event& e) override;
 	void cleanup() override;
@@ -24,6 +25,7 @@ protected:
 private:
 	MeshLoader m_loader;
 	Entity m_triangle;
+	Entity m_terrain;
 	sf::Shader m_shader;
 
 	glm::mat4 m_projection;
