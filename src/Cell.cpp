@@ -53,10 +53,13 @@ void Cell::init()
 	glBindVertexArray(m_vao);
 	{
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
-		glBufferData(GL_EELEMNT_ARRAY_BUFFER, INDICIES.size() * sizeof(INDICIES[0]), INDICIES.data(), GL_STATIC_DRAW);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, INDICIES.size() * sizeof(INDICIES[0]), INDICIES.data(), GL_STATIC_DRAW);
 		
 		glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
 		glBufferData(GL_ARRAY_BUFFER, VERTICES.size() * sizeof(VERTICES[0]), VERTICES.data(), GL_STATIC_DRAW);
+
+		glEnableVertexAttribArray(0);
+
 	}
 	glBindVertexArray(0);
 }
