@@ -72,6 +72,34 @@ bool MazeGame::init()
 				m_loader.add({ { cellX + Cell::WIDTH, 0, cellZ - Cell::WIDTH }, color });
 				m_loader.add({ { cellX + Cell::WIDTH, 0, cellZ }, color });
 			}
+
+			// Add the front wall if necessary.
+			if (cell.hasWall(Cell::Direction::FRONT)) {
+				m_loader.add({ { cellX, Cell::HEIGHT, cellZ - Cell::WIDTH }, color });
+				m_loader.add({ { cellX, 0, cellZ - Cell::WIDTH }, color });
+				m_loader.add({ { cellX + Cell::WIDTH, Cell::HEIGHT, cellZ - Cell::WIDTH }, color });
+				m_loader.add({ { cellX + Cell::WIDTH, Cell::HEIGHT, cellZ - Cell::WIDTH }, color });
+				m_loader.add({ { cellX, 0, cellZ - Cell::WIDTH }, color });
+				m_loader.add({ { cellX + Cell::WIDTH, 0, cellZ - Cell::WIDTH }, color });
+			}
+
+			// Add the back wall if necessary.
+			if (cell.hasWall(Cell::Direction::BACK)) {
+				m_loader.add({ { cellX + Cell::WIDTH, Cell::HEIGHT, cellZ }, color });
+				m_loader.add({ { cellX + Cell::WIDTH, 0, cellZ }, color });
+				m_loader.add({ { cellX, Cell::HEIGHT, cellZ }, color });
+				m_loader.add({ { cellX, Cell::HEIGHT, cellZ }, color });
+				m_loader.add({ { cellX + Cell::WIDTH, 0, cellZ }, color });
+				m_loader.add({ { cellX, 0, cellZ }, color });
+			}
+
+			// Add the ceiling.
+			m_loader.add({ { cellX, Cell::HEIGHT, cellZ - Cell::WIDTH }, color }); // 1
+			m_loader.add({ { cellX + Cell::WIDTH, Cell::HEIGHT, cellZ - Cell::WIDTH }, color }); // 3
+			m_loader.add({ { cellX, Cell::HEIGHT, cellZ }, color }); // 2
+			m_loader.add({ { cellX, Cell::HEIGHT, cellZ }, color }); // 2
+			m_loader.add({ { cellX + Cell::WIDTH, Cell::HEIGHT, cellZ - Cell::WIDTH }, color }); // 3
+			m_loader.add({ { cellX + Cell::WIDTH, Cell::HEIGHT, cellZ }, color }); // 4
 		}
 	}
 
