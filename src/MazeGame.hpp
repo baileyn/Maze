@@ -39,6 +39,8 @@ protected:
 	void cleanup() override;
 
 private:
+	void updateCamera(sf::Time& delta);
+
 	MeshLoader m_loader;
 	Entity m_triangle;
 	sf::Shader m_shader;
