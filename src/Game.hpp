@@ -75,6 +75,12 @@ protected:
      */
     virtual void handleWindowEvent(sf::Event& event) {}
 
+	/**
+	 * @brief returns the sf::Window for the game.
+	 * @return the sf::Window for the game.
+	 */
+	sf::Window& window() { return m_window; }
+
 private:
     sf::Window m_window;
     bool m_running;
