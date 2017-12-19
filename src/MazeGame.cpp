@@ -4,17 +4,154 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include <array>
+#include <stack>
+#include <random>
+
+#include <iostream>
+
+namespace {
+	std::random_device random_device{};
+	std::mt19937 random_engine{random_device()};
+
+	Cell::Direction randomDirection(const Cell* cell)
+	{
+		std::vector<Cell::Direction> directions{};
+
+		if (!cell->hasDirectionBeenSearched(Cell::Direction::FRONT)) {
+			directions.push_back(Cell::Direction::FRONT);
+		}
+
+		if (!cell->hasDirectionBeenSearched(Cell::Direction::BACK)) {
+			directions.push_back(Cell::Direction::BACK);
+		}
+
+		if (!cell->hasDirectionBeenSearched(Cell::Direction::RIGHT)) {
+			directions.push_back(Cell::Direction::RIGHT);
+		}
+
+		if (!cell->hasDirectionBeenSearched(Cell::Direction::LEFT)) {
+			directions.push_back(Cell::Direction::LEFT);
+		}
+
+		if (directions.size() == 1) {
+			return directions.at(0);
+		}
+
+		return directions.at(random_engine() % (directions.size() - 1));
+	}
+
+	constexpr Cell::Direction reverseDirection(Cell::Direction direction)
+	{
+		switch (direction) {
+		case Cell::Direction::FRONT:
+			return Cell::Direction::BACK;
+		case Cell::Direction::BACK:
+			return Cell::Direction::FRONT;
+		case Cell::Direction::LEFT:
+			return Cell::Direction::RIGHT;
+		case Cell::Direction::RIGHT:
+			return Cell::Direction::LEFT;
+		default:
+			throw std::runtime_error{ "Invalid direction" };
+		}
+	}
+}
+
 MazeGame::MazeGame()
 	: Game{ "Window title", 800, 600, sf::ContextSettings(24, 8, 4, 3, 3) }, m_triangle{ 0, 0, 0, 0 }, 
-	m_camera { { 0, 1.7f, 0 } }, m_start{ 0, 0 }, m_end{ WIDTH - 1, HEIGHT -1 }
+	m_camera { { Cell::WIDTH / 2.0f, 1.7f, Cell::HEIGHT / -2.0f } }, m_start{ 0, 0 }, m_end{ WIDTH - 1, HEIGHT -1 }
 {
 	for (size_t x = 0; x < WIDTH; x++) {
 		for (size_t z = 0; z < HEIGHT; z++) {
 			auto& cell = m_cells.at(x + z * WIDTH);
+			cell.setLocation(x, z);
 
-			// Initialize the cells
+			if (x == 0) {
+				cell.markSearched(Cell::Direction::LEFT);
+			} 
+			else if (x == WIDTH - 1) {
+				cell.markSearched(Cell::Direction::RIGHT);
+			}
+
+			if (z == 0) {
+				cell.markSearched(Cell::Direction::BACK);
+			}
+			else if (z == HEIGHT - 1) {
+				cell.markSearched(Cell::Direction::FRONT);
+			}
 		}
 	}
+	
+	std::stack<Cell*> cells;
+
+	Cell* currentCell = &m_cells.at(m_cells.size() - 1);
+
+	do {
+		auto x = currentCell->getX();
+		auto z = currentCell->getZ();
+		
+		if (currentCell->hasBeenSearched()) {
+			currentCell = cells.top();
+			cells.pop();
+			continue;
+		}
+
+		auto direction = randomDirection(currentCell);
+
+		Cell* destination = nullptr;
+
+		switch (direction) {
+		case Cell::Direction::FRONT:
+			if (z + 1 < HEIGHT) {
+				destination = &m_cells.at(x + (z + 1) * WIDTH);
+			}
+			else {
+				continue;
+			}
+			break;
+		case Cell::Direction::BACK:
+			if (z - 1 >= 0) {
+				destination = &m_cells.at(x + (z - 1) * WIDTH);
+			}
+			else {
+				continue;
+			}
+			break;
+		case Cell::Direction::LEFT:
+			if (x - 1 >= 0) {
+				destination = &m_cells.at((x - 1) + z * WIDTH);
+			}
+			else {
+				continue;
+			}
+			break;
+		case Cell::Direction::RIGHT:
+			if (x + 1 < WIDTH) {
+				destination = &m_cells.at((x + 1) + z * WIDTH);
+			}
+			else {
+				continue;
+			}
+			break;
+		default:
+			throw std::runtime_error{ "Invalid Direction" };
+		}
+
+		if (destination->hasBeenVisited()) {
+			currentCell->markSearched(direction);
+			continue;
+		}
+
+		currentCell->markSearched(direction);
+		currentCell->destroyWall(direction);
+		destination->visit();
+		destination->markSearched(reverseDirection(direction));
+		destination->destroyWall(reverseDirection(direction));
+		
+		cells.push(currentCell);
+		currentCell = destination;
+	} while (!cells.empty());
 }
 
 bool MazeGame::init()
@@ -29,7 +166,15 @@ bool MazeGame::init()
 		for (size_t z = 0; z < HEIGHT; z++) {
 			auto& cell = m_cells.at(x + z * WIDTH);
 
-			glm::vec3 color{ 0, 0, 1 };
+			glm::vec3 color{
+				(random_engine() % 255) / 255.0f,
+				(random_engine() % 255) / 255.0f,
+				(random_engine() % 255) / 255.0f
+			};
+
+			glm::vec3 floorColor{
+				0.5, 0.5, 0.5
+			};
 
 			if (x == m_start.x && z == m_start.y) {
 				color.r = 0;
@@ -46,12 +191,12 @@ bool MazeGame::init()
 			float cellZ = -(z * Cell::WIDTH);
 
 			// Add the floor of the cell
-			m_loader.add({ { cellX, 0, cellZ - Cell::WIDTH }, color });
-			m_loader.add({ { cellX, 0, cellZ }, color });
-			m_loader.add({ { cellX + Cell::WIDTH, 0, cellZ - Cell::WIDTH }, color });
-			m_loader.add({ { cellX + Cell::WIDTH, 0, cellZ - Cell::WIDTH }, color });
-			m_loader.add({ { cellX, 0, cellZ }, color });
-			m_loader.add({ { cellX + Cell::WIDTH, 0, cellZ }, color });
+			m_loader.add({ { cellX, 0, cellZ - Cell::WIDTH }, floorColor });
+			m_loader.add({ { cellX, 0, cellZ }, floorColor });
+			m_loader.add({ { cellX + Cell::WIDTH, 0, cellZ - Cell::WIDTH }, floorColor });
+			m_loader.add({ { cellX + Cell::WIDTH, 0, cellZ - Cell::WIDTH }, floorColor });
+			m_loader.add({ { cellX, 0, cellZ }, floorColor });
+			m_loader.add({ { cellX + Cell::WIDTH, 0, cellZ }, floorColor });
 
 			// Add the left wall if necessary.
 			if (cell.hasWall(Cell::Direction::LEFT)) {
@@ -94,12 +239,12 @@ bool MazeGame::init()
 			}
 
 			// Add the ceiling.
-			m_loader.add({ { cellX, Cell::HEIGHT, cellZ - Cell::WIDTH }, color }); // 1
+			/*m_loader.add({ { cellX, Cell::HEIGHT, cellZ - Cell::WIDTH }, color }); // 1
 			m_loader.add({ { cellX + Cell::WIDTH, Cell::HEIGHT, cellZ - Cell::WIDTH }, color }); // 3
 			m_loader.add({ { cellX, Cell::HEIGHT, cellZ }, color }); // 2
 			m_loader.add({ { cellX, Cell::HEIGHT, cellZ }, color }); // 2
 			m_loader.add({ { cellX + Cell::WIDTH, Cell::HEIGHT, cellZ - Cell::WIDTH }, color }); // 3
-			m_loader.add({ { cellX + Cell::WIDTH, Cell::HEIGHT, cellZ }, color }); // 4
+			m_loader.add({ { cellX + Cell::WIDTH, Cell::HEIGHT, cellZ }, color }); // 4*/
 		}
 	}
 

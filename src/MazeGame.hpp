@@ -15,10 +15,10 @@
 
 class MazeGame : public Game
 {
+public:
 	static constexpr size_t WIDTH = 10;
 	static constexpr size_t HEIGHT = 10;
 
-public:
 	MazeGame();
 
 protected:
