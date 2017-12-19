@@ -23,7 +23,10 @@ void MeshLoader::add(const Vertex& vertex)
 	}
 	else {
 		// If it was found, add a new entry for the index.
-		m_indices.push_back(idx - std::begin(m_vertices));
+		size_t location = idx - std::begin(m_vertices);
+		m_indices.push_back(location);
+
+
 	}
 }
 

@@ -12,7 +12,7 @@ void Entity::render()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
 	glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
 
-	glDrawArrays(GL_TRIANGLES, 0, m_indiciesCount);
+	glDrawElements(GL_TRIANGLES, m_indiciesCount, GL_UNSIGNED_INT, nullptr);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
