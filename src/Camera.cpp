@@ -12,12 +12,19 @@ Camera::Camera(const glm::vec3& position)
 void Camera::update(sf::Time& delta)
 {
 	float deltaZ = 0;
+	float deltaY = 0;
+
+	float speed = WALK_SPEED;
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift)) {
+		speed *= 4;
+	}
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) {
-		deltaZ += delta.asSeconds() * WALK_SPEED;
+		deltaZ += delta.asSeconds() * speed;
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) {
-		deltaZ -= delta.asSeconds() * WALK_SPEED;
+		deltaZ -= delta.asSeconds() * speed;
 	}
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left)) {
@@ -25,6 +32,12 @@ void Camera::update(sf::Time& delta)
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right)) {
 		m_yaw += delta.asSeconds() * TURN_SPEED;
+	}
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up)) {
+		deltaY += delta.asSeconds() * speed;
+	} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down)) {
+		deltaY -= delta.asSeconds() * speed;
 	}
 
 	float yaw = m_yaw - 90;
@@ -39,6 +52,7 @@ void Camera::update(sf::Time& delta)
 	front *= deltaZ;
 
 	m_position += front;
+	m_position.y += deltaY;
 }
 
 void Camera::translate(float x, float y, float z)

@@ -38,7 +38,7 @@ namespace {
 			return directions.at(0);
 		}
 
-		return directions.at(random_engine() % (directions.size() - 1));
+		return directions.at(random_engine() % directions.size());
 	}
 
 	constexpr Cell::Direction reverseDirection(Cell::Direction direction)
@@ -86,6 +86,7 @@ MazeGame::MazeGame()
 	std::stack<Cell*> cells;
 
 	Cell* currentCell = &m_cells.at(m_cells.size() - 1);
+	currentCell->visit();
 
 	do {
 		auto x = currentCell->getX();
