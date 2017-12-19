@@ -2,8 +2,6 @@
 #define CELL_HPP
 #pragma once
 
-#include <glad/glad.h>
-
 class Cell
 {
 public:
