@@ -48,6 +48,20 @@ public:
 	glm::mat4 getViewMatrix() const;
 
 	/**
+	 * @brief sets the current location of the Camera.
+	 * 
+	 * @param position the new position of the Camera.
+	 */
+	void setLocation(glm::vec3 position);
+
+	/**
+	 * @brief returns the current location of the Camera.
+	 * 
+	 * @return glm::vec3 the current location of the Camera.
+	 */
+	glm::vec3 getLocation() const;
+
+	/**
 	 * @brief sets this Camera's yaw (y rotation).
 	 * 
 	 * @param yaw the new yaw (y rotation) for this Camera in degrees.

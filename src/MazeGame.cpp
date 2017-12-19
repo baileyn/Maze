@@ -327,13 +327,40 @@ void MazeGame::updateCamera(sf::Time& delta)
 	float yaw = m_camera.getYaw();
 
 	glm::vec3 front{
-		glm::cos(glm::radians(yaw)) * glm::cos(glm::radians(m_camera.getPitch())),
-		glm::sin(glm::radians(m_camera.getPitch())),
-		glm::sin(glm::radians(yaw)) * glm::cos(glm::radians(m_camera.getPitch()))
+		static_cast<float>(glm::cos(glm::radians(yaw)) * glm::cos(glm::radians(m_camera.getPitch()))),
+		static_cast<float>(glm::sin(glm::radians(m_camera.getPitch()))),
+		static_cast<float>(glm::sin(glm::radians(yaw)) * glm::cos(glm::radians(m_camera.getPitch())))
 	};
 
 	front = glm::normalize(front);
 	front *= deltaZ;
+
+	if(deltaZ != 0) {
+		// Collision detection isn't important unless we're moving.
+
+		// Calculate cellX and cellY
+		auto location = m_camera.getLocation();
+		unsigned int cellX = static_cast<int>(location.x / Cell::WIDTH);
+		unsigned int cellZ = static_cast<int>(-location.z / Cell::WIDTH);
+
+		unsigned int nextCellX = 0;
+		unsigned int nextCellZ = 0;
+
+		glm::vec2 direction;
+
+		if(glm::abs(front.x) > glm::abs(front.z)) {
+			// Traveling more in the x direction
+			direction.x = front.x > 0 ? 1.0f : -1.0f;
+		} else {
+			// Traveling more in the z direction
+			direction.y = front.z > 0 ? -1.0f : 1.0f;
+		}
+
+		nextCellX = cellX + static_cast<int>(direction.x);
+		nextCellZ = cellZ + static_cast<int>(direction.y);
+
+		printf("Moving from (%d, %d) -> (%d, %d)\n", cellX, cellZ, nextCellX, nextCellZ);
+	}
 
 	m_camera.translate(front.x, front.y + deltaY, front.z);
 }
