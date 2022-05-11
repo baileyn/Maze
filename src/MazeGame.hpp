@@ -3,6 +3,11 @@
 #pragma once
 
 #include "Game.hpp"
+#include "MeshLoader.hpp"
+
+#include <SFML/Graphics.hpp>
+
+#include <glm/glm.hpp>
 
 class MazeGame : public Game
 {
@@ -12,6 +17,14 @@ public:
 protected:
 	bool init() override;
 	void render() override;
+	void handleWindowEvent(sf::Event& e) override;
+
+private:
+	MeshLoader m_loader;
+	Entity m_triangle;
+	sf::Shader m_shader;
+
+	glm::mat4 m_projection;
 };
 
 

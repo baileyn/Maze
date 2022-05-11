@@ -45,7 +45,7 @@ configure_file(
 )
 
 find_package(OpenGL REQUIRED)
-find_package(SFML 2.4 REQUIRED COMPONENTS system window)
+find_package(SFML 2.4 REQUIRED COMPONENTS system window graphics)
 
 include_directories(
     ${PROJECT_BINARY_DIR}
@@ -63,6 +63,8 @@ set(SOURCE_FILES src/main.cpp
                  src/Cell.cpp src/Cell.hpp
 				 src/MazeGame.cpp src/MazeGame.hpp
 				 src/Vertex.hpp
+				 src/Entity.cpp src/Entity.hpp
+				 src/MeshLoader.cpp src/MeshLoader.hpp
                  deps/glad/src/glad.c)
 
 
@@ -72,3 +74,8 @@ target_link_libraries(${PROJECT_NAME} ${OPENGL_gl_LIBRARY} ${SFML_LIBRARIES})
 if(CMAKE_CXX_COMPILER_ID MATCHES GNU)
     target_link_libraries(${PROJECT_NAME} dl)
 endif()
+
+
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+                   COMMAND ${CMAKE_COMMAND} -E copy_directory
+                       ${CMAKE_SOURCE_DIR}/Assets $<TARGET_FILE_DIR:${PROJECT_NAME}>/Assets)
