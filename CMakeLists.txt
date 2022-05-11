@@ -72,7 +72,7 @@ set(SOURCE_FILES src/main.cpp
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 target_link_libraries(${PROJECT_NAME} ${OPENGL_gl_LIBRARY} ${SFML_LIBRARIES})
 
-if(CMAKE_CXX_COMPILER_ID MATCHES GNU)
+if(UNIX)
     target_link_libraries(${PROJECT_NAME} dl)
 endif()
 
