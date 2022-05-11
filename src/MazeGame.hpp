@@ -2,6 +2,7 @@
 #define MAZEGAME_HPP
 #pragma once
 
+#include "Cell.hpp"
 #include "Game.hpp"
 #include "MeshLoader.hpp"
 #include "Camera.hpp"
@@ -10,8 +11,13 @@
 
 #include <glm/glm.hpp>
 
+#include <array>
+
 class MazeGame : public Game
 {
+	static constexpr size_t WIDTH = 10;
+	static constexpr size_t HEIGHT = 10;
+
 public:
 	MazeGame();
 
@@ -25,11 +31,15 @@ protected:
 private:
 	MeshLoader m_loader;
 	Entity m_triangle;
-	Entity m_terrain;
 	sf::Shader m_shader;
+	
+	std::array<Cell, WIDTH * HEIGHT> m_cells;
 
 	glm::mat4 m_projection;
 	Camera m_camera;
+
+	glm::vec2 m_start;
+	glm::vec2 m_end;
 };
 
 

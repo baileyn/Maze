@@ -15,8 +15,9 @@ public:
      * @param title the title of the window to open.
      * @param width the width of the inner window.
      * @param height the height of the inner window.
+	 * @param settings the OpenGL context settings for the SFML window.
      */
-    Game(const std::string& title, unsigned int width, unsigned int height);
+	Game(const std::string& title, unsigned int width, unsigned int height, sf::ContextSettings settings = sf::ContextSettings());
     virtual ~Game() {}
 
     /**

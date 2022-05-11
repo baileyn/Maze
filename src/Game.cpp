@@ -1,7 +1,7 @@
 #include "Game.hpp"
 
-Game::Game(const std::string& title, unsigned int width, unsigned int height)
-    : m_window{sf::VideoMode{width, height}, title}, m_running{false}
+Game::Game(const std::string& title, unsigned int width, unsigned int height, sf::ContextSettings settings)
+    : m_window{sf::VideoMode{width, height}, title, sf::Style::Default, settings}, m_running{false}
 {
 
 }

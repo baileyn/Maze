@@ -7,35 +7,22 @@
 class Cell
 {
 public:
-    static constexpr float WIDTH = 2.45f;
+	enum class Direction : unsigned char {
+		FRONT = 0b0001, 
+		BACK  = 0b0010, 
+		LEFT  = 0b0100, 
+		RIGHT = 0b1000
+	};
+
+    static constexpr float WIDTH = 10.0f;
     static constexpr float HEIGHT = 2.45f;
 
-    enum class Type {
-        Wall,
-        Room
-    };
+	Cell();
 
-    Cell(Type type, unsigned int x, unsigned int y);
-
-    unsigned int getX() const;
-    unsigned int getY() const;
-
-    Cell* getParent();
-    void setParent(Cell* parent);
-
-	void init();
-	void render();
+	bool hasWall(Direction direction) const;
 
 private:
-    Type m_type;
-    unsigned int m_x;
-    unsigned int m_y;
-    unsigned int m_directions;
-    Cell* m_parent;
-
-	GLuint m_vao;
-	GLuint m_vbo;
-	GLuint m_ebo;
+	unsigned int m_walls;
 };
 
 #endif // CELL_HPP
