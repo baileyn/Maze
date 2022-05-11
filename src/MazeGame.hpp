@@ -16,9 +16,19 @@
 class MazeGame : public Game
 {
 public:
+	/**
+	 * @brief the width of the Maze in Cells.
+	 */
 	static constexpr size_t WIDTH = 8;
+
+	/**
+	 * @brief the height (depth) of the Maze in Cells.
+	 */
 	static constexpr size_t HEIGHT = 8;
 
+	/**
+	 * @brief constructs a new MazeGame.
+	 */
 	MazeGame();
 
 protected:
