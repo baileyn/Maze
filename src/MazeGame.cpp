@@ -45,7 +45,7 @@ Cell::Direction randomDirection(const Cell *cell)
 	return directions.at(random_engine() % directions.size());
 }
 
-constexpr Cell::Direction reverseDirection(Cell::Direction direction)
+Cell::Direction reverseDirection(Cell::Direction direction)
 {
 	switch (direction)
 	{
@@ -62,7 +62,7 @@ constexpr Cell::Direction reverseDirection(Cell::Direction direction)
 	}
 }
 
-constexpr Cell::Direction getDirectionFromVector(const glm::vec2 &vector)
+Cell::Direction getDirectionFromVector(const glm::vec2 &vector)
 {
 	if (vector.x < 0)
 	{
