@@ -5,7 +5,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 MazeGame::MazeGame()
-	: Game{ "Window title", 800, 600 }, m_triangle{ 0, 0, 0, 0 }, m_camera{ { 0, 5, 5 } }
+	: Game{ "Window title", 800, 600 }, m_triangle{ 0, 0, 0, 0 }, m_camera{ { 0, 0, 5 } }
 {
 }
 
@@ -27,6 +27,7 @@ bool MazeGame::init()
 	glViewport(0, 0, size.x, size.y);
 	m_projection = glm::perspective<float>(glm::radians(75.0f), static_cast<float>(size.x) / static_cast<float>(size.y), 0.001f, 1000.0f);
 
+	glEnable(GL_CULL_FACE);
 	glClearColor(0, 0, 0, 1);
 	return true;
 }
