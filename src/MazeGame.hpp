@@ -4,6 +4,7 @@
 
 #include "Game.hpp"
 #include "MeshLoader.hpp"
+#include "Camera.hpp"
 
 #include <SFML/Graphics.hpp>
 
@@ -18,6 +19,7 @@ protected:
 	bool init() override;
 	void render() override;
 	void handleWindowEvent(sf::Event& e) override;
+	void cleanup() override;
 
 private:
 	MeshLoader m_loader;
@@ -25,6 +27,7 @@ private:
 	sf::Shader m_shader;
 
 	glm::mat4 m_projection;
+	Camera m_camera;
 };
 
 

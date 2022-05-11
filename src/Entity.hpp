@@ -10,6 +10,7 @@ public:
 	Entity(size_t indicesCount, GLuint vao, GLuint vbo, GLuint ebo);
 
 	void render();
+	void cleanup();
 
 private:
 	size_t m_indiciesCount;
