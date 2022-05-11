@@ -65,6 +65,7 @@ set(SOURCE_FILES src/main.cpp
 				 src/Vertex.hpp
 				 src/Entity.cpp src/Entity.hpp
 				 src/MeshLoader.cpp src/MeshLoader.hpp
+				 src/Camera.cpp src/Camera.hpp
                  deps/glad/src/glad.c)
 
 
