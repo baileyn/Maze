@@ -8,8 +8,6 @@
 #include <stack>
 #include <random>
 
-#include <iostream>
-
 namespace {
 	std::random_device random_device{};
 	std::mt19937 random_engine{random_device()};

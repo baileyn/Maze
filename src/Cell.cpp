@@ -1,8 +1,6 @@
 #include "Cell.hpp"
 #include "Vertex.hpp"
 
-#include <vector>
-
 Cell::Cell()
 	: m_walls{ 0b1111 }, m_searched{}, m_visited{ false }
 {
