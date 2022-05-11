@@ -249,6 +249,9 @@ bool MazeGame::init()
 
 	m_triangle = m_loader.build();
 
+	// By default the Camera points down the X axis, rotate it to point down the Z axis.
+	m_camera.rotateY(-90);
+
 	auto size = window().getSize();
 	glViewport(0, 0, size.x, size.y);
 	m_projection = glm::perspective<float>(glm::radians(45.0f), static_cast<float>(size.x) / static_cast<float>(size.y), 0.001f, 1000.0f);
@@ -261,7 +264,7 @@ bool MazeGame::init()
 
 void MazeGame::update(sf::Time& delta)
 {
-	m_camera.update(delta);
+	updateCamera(delta);
 }
 
 void MazeGame::render()
@@ -286,4 +289,51 @@ void MazeGame::handleWindowEvent(sf::Event& e)
 void MazeGame::cleanup()
 {
 	m_triangle.cleanup();
+}
+
+void MazeGame::updateCamera(sf::Time& delta)
+{
+	float deltaZ = 0;
+	float deltaY = 0;
+
+	float speed = Camera::WALK_SPEED;
+	float deltaYaw = 0;
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift)) {
+		speed *= 4;
+	}
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) {
+		deltaZ += delta.asSeconds() * speed;
+	}
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) {
+		deltaZ -= delta.asSeconds() * speed;
+	}
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left)) {
+		deltaYaw -= delta.asSeconds() * Camera::TURN_SPEED;
+	}
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right)) {
+		deltaYaw += delta.asSeconds() * Camera::TURN_SPEED;
+	}
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up)) {
+		deltaY += delta.asSeconds() * speed;
+	} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down)) {
+		deltaY -= delta.asSeconds() * speed;
+	}
+
+	m_camera.rotateY(deltaYaw);
+	float yaw = m_camera.getYaw();
+
+	glm::vec3 front{
+		glm::cos(glm::radians(yaw)) * glm::cos(glm::radians(m_camera.getPitch())),
+		glm::sin(glm::radians(m_camera.getPitch())),
+		glm::sin(glm::radians(yaw)) * glm::cos(glm::radians(m_camera.getPitch()))
+	};
+
+	front = glm::normalize(front);
+	front *= deltaZ;
+
+	m_camera.translate(front.x, front.y + deltaY, front.z);
 }
